@@ -37,14 +37,24 @@ contract LootBoxVRF is VRFConsumerBaseV2Plus{
     event BoxPurchased(address indexed buyer,uint256 indexed requestId);
     event BoxOpened(address indexed buyer,uint8 rarity,uint256 itemId);
     event RandomsRequest(uint256 requestId,address indexed user);
+    event UpdateCallbackGasLimit(uint32 _callbackGasLimit);
 
     error Insufficientvalue();
     error BadStats();
+    error gatLimitTooLow();
     constructor(
         uint256 _subscriptionId
     ) VRFConsumerBaseV2Plus(vrfCoordinator){
         COORDINATOR = IVRFCoordinatorV2Plus(vrfCoordinator);
         subId = _subscriptionId;
+    }
+
+    function updateCallbackGasLimit(uint32 _callbackGasLimit)public {
+        if(_callbackGasLimit<200000){
+            revert gatLimitTooLow();
+        }
+        callbackGasLimit = _callbackGasLimit;
+        emit UpdateCallbackGasLimit(callbackGasLimit);
     }
 
     function requestRandomWords() public returns(uint256){
@@ -54,7 +64,11 @@ contract LootBoxVRF is VRFConsumerBaseV2Plus{
             requestConfirmations:requestConfirmations,
             callbackGasLimit:callbackGasLimit,
             numWords:numWords,
-            extraArgs:""
+            extraArgs:VRFV2PlusClient._argsToBytes(
+                VRFV2PlusClient.ExtraArgsV1({
+                    nativePayment:true
+                })
+            )
         });
         uint256 requestId = COORDINATOR.requestRandomWords(randomWordRequest);
         emit RandomsRequest(requestId,msg.sender);
@@ -115,4 +129,5 @@ contract LootBoxVRF is VRFConsumerBaseV2Plus{
         // _mint(a.buyer, itemId);
         emit BoxOpened(a.buyer, pickedClass, itemId);
     }
+
 }

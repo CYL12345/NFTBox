@@ -69,6 +69,11 @@
 				"type": "error"
 			},
 			{
+				"inputs": [],
+				"name": "gatLimitTooLow",
+				"type": "error"
+			},
+			{
 				"anonymous": false,
 				"inputs": [
 					{
@@ -180,6 +185,19 @@
 					}
 				],
 				"name": "RandomsRequest",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint32",
+						"name": "_callbackGasLimit",
+						"type": "uint32"
+					}
+				],
+				"name": "UpdateCallbackGasLimit",
 				"type": "event"
 			},
 			{
@@ -384,6 +402,19 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_callbackGasLimit",
+						"type": "uint32"
+					}
+				],
+				"name": "updateCallbackGasLimit",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -491,11 +522,11 @@
 			]
 		},
 		"src/LotBoxVRF.sol": {
-			"keccak256": "0x9a32effdec36992d4e7a33725b876dec3da0b05020e4240e361314f0fc9362cd",
+			"keccak256": "0x0165e89528ca73798d8c9698ec7b89d678fa2dd5af324e1071815006840fba98",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://5bd397f09143eeb1df2f6150b2d6df23bb347a909299141d5ab7cb49f3d7fc19",
-				"dweb:/ipfs/QmWGD2e71oeu6ELZUtoTazEz3295w2fREyh9hvH3gjAo13"
+				"bzz-raw://c120569ebf24509497312cdd7edd753cf9c0f575c4311da9a57a0ea55f5b2882",
+				"dweb:/ipfs/QmbSwJhNwj4cF7PyqzZUouqttCiPMbB8Kk2k9dwbFTnytu"
 			]
 		}
 	},
