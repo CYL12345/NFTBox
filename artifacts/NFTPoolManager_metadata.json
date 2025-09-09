@@ -1,0 +1,625 @@
+{
+	"compiler": {
+		"version": "0.8.30+commit.73712a01"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "ErrorPool",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "NoCaller",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					}
+				],
+				"name": "OwnableInvalidOwner",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "OwnableUnauthorizedAccount",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "ReentrancyGuardReentrantCall",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "invalidData",
+				"type": "error"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "caller",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "allowed",
+						"type": "bool"
+					}
+				],
+				"name": "CallerSet",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint8",
+						"name": "rarity",
+						"type": "uint8"
+					}
+				],
+				"name": "Deposited",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint8",
+						"name": "rarity",
+						"type": "uint8"
+					}
+				],
+				"name": "ItemClaimed",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "previousOwner",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "OwnershipTransferred",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					}
+				],
+				"name": "Withdrawn",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint8",
+						"name": "rarity",
+						"type": "uint8"
+					},
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					}
+				],
+				"name": "adminWithdrawToken",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "authorizedCaller",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint8",
+						"name": "rarity",
+						"type": "uint8"
+					}
+				],
+				"name": "isInpool",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint8",
+						"name": "rarity",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					}
+				],
+				"name": "itemAt",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "operator",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "onERC721Received",
+				"outputs": [
+					{
+						"internalType": "bytes4",
+						"name": "",
+						"type": "bytes4"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint8",
+						"name": "rarity",
+						"type": "uint8"
+					}
+				],
+				"name": "poolLength",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "pools",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint8",
+						"name": "rarity",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "randomness",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					}
+				],
+				"name": "popItem",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "renounceOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					}
+				],
+				"name": "rescueERC721",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "caller",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "allowed",
+						"type": "bool"
+					}
+				],
+				"name": "setAuthorizedCaller",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "transferOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"errors": {
+				"OwnableInvalidOwner(address)": [
+					{
+						"details": "The owner is not a valid owner account. (eg. `address(0)`)"
+					}
+				],
+				"OwnableUnauthorizedAccount(address)": [
+					{
+						"details": "The caller account is not authorized to perform an operation."
+					}
+				],
+				"ReentrancyGuardReentrantCall()": [
+					{
+						"details": "Unauthorized reentrant call."
+					}
+				]
+			},
+			"kind": "dev",
+			"methods": {
+				"adminWithdrawToken(address,uint256,uint8,address)": {
+					"details": "管理员提取指定NFT（仅合约所有者可调用） 功能：若NFT在池中，先从池中移除，再将NFT转账给接收者",
+					"params": {
+						"rarity": "稀有度等级",
+						"to": "NFT接收者地址",
+						"token": "NFT合约地址",
+						"tokenId": "NFT的tokenId"
+					}
+				},
+				"onERC721Received(address,address,uint256,bytes)": {
+					"params": {
+						"data": "//附加数据",
+						"from": "//NFT原持有者",
+						"operator": "//触发转账的交易员",
+						"tokenId": "//转入的NFT ID"
+					}
+				},
+				"owner()": {
+					"details": "Returns the address of the current owner."
+				},
+				"renounceOwnership()": {
+					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
+				},
+				"rescueERC721(address,uint256,address)": {
+					"details": "管理员救援误转入的NFT（仅合约所有者可调用） 功能：用于提取未通过onERC721Received存入、直接转入的NFT",
+					"params": {
+						"to": "接收者地址",
+						"token": "NFT合约地址",
+						"tokenId": "NFT的tokenId"
+					}
+				},
+				"transferOwnership(address)": {
+					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"onERC721Received(address,address,uint256,bytes)": {
+					"notice": "接受NFT的回调函数"
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"src/NFTPoolManager.sol": "NFTPoolManager"
+		},
+		"evmVersion": "prague",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"lib/openzeppelin-contracts/contracts/access/Ownable.sol": {
+			"keccak256": "0xff6d0bb2e285473e5311d9d3caacb525ae3538a80758c10649a4d61029b017bb",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://8ed324d3920bb545059d66ab97d43e43ee85fd3bd52e03e401f020afb0b120f6",
+				"dweb:/ipfs/QmfEckWLmZkDDcoWrkEvMWhms66xwTLff9DDhegYpvHo1a"
+			]
+		},
+		"lib/openzeppelin-contracts/contracts/token/ERC721/IERC721.sol": {
+			"keccak256": "0xf78f05f3b8c9f75570e85300d7b4600d7f6f6a198449273f31d44c1641adb46f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://e28b872613b45e0e801d4995aa4380be2531147bfe2d85c1d6275f1de514fba3",
+				"dweb:/ipfs/QmeeFcfShHYaS3BdgVj78nxR28ZaVUwbvr66ud8bT6kzw9"
+			]
+		},
+		"lib/openzeppelin-contracts/contracts/token/ERC721/IERC721Receiver.sol": {
+			"keccak256": "0x88cd5e3bee2e8c36b8d9058fbcaa81ad5704281b25634122234b55ea853d8055",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://8dc7e7ab5b8ea36c15027ab04221b05d1c970f47a53e9fd47ead8ca665d49c7e",
+				"dweb:/ipfs/Qmeeph7fsDyfRr8vb2L8KcDEmKPb224TAayMvgqgGAnqpL"
+			]
+		},
+		"lib/openzeppelin-contracts/contracts/utils/Context.sol": {
+			"keccak256": "0x493033a8d1b176a037b2cc6a04dad01a5c157722049bbecf632ca876224dd4b2",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6a708e8a5bdb1011c2c381c9a5cfd8a9a956d7d0a9dc1bd8bcdaf52f76ef2f12",
+				"dweb:/ipfs/Qmax9WHBnVsZP46ZxEMNRQpLQnrdE4dK8LehML1Py8FowF"
+			]
+		},
+		"lib/openzeppelin-contracts/contracts/utils/ReentrancyGuard.sol": {
+			"keccak256": "0x4adeafe83d2adc5841d039a47ed53e774a48f086a3056eae9067b5881810cd1f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://9fe8dff5b18d1bd415afa9beea101bf5225cb8f47a140f621b5f805d0dc3f1b9",
+				"dweb:/ipfs/QmR6TjUsHbp9wj5tzfjRDG8tXRwyrzQSHv446PYi6X5z2G"
+			]
+		},
+		"lib/openzeppelin-contracts/contracts/utils/StorageSlot.sol": {
+			"keccak256": "0xcf74f855663ce2ae00ed8352666b7935f6cddea2932fdf2c3ecd30a9b1cd0e97",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://9f660b1f351b757dfe01438e59888f31f33ded3afcf5cb5b0d9bf9aa6f320a8b",
+				"dweb:/ipfs/QmarDJ5hZEgBtCmmrVzEZWjub9769eD686jmzb2XpSU1cM"
+			]
+		},
+		"lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol": {
+			"keccak256": "0x8891738ffe910f0cf2da09566928589bf5d63f4524dd734fd9cedbac3274dd5c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://971f954442df5c2ef5b5ebf1eb245d7105d9fbacc7386ee5c796df1d45b21617",
+				"dweb:/ipfs/QmadRjHbkicwqwwh61raUEapaVEtaLMcYbQZWs9gUkgj3u"
+			]
+		},
+		"src/NFTPoolManager.sol": {
+			"keccak256": "0x8b067ff6538183bd0b37ac76a76dddd9c26991ec8fb0989897453aca7786d804",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://79c51f39053f0a1301149bc7083b2381abb72b966996cf430af6ae3b028fe1e1",
+				"dweb:/ipfs/QmbVoYbAaUw2shPXhSFXzUzaqpyZ6qeV2P837zF9GLeJCn"
+			]
+		}
+	},
+	"version": 1
+}

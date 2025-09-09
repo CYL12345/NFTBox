@@ -25,11 +25,12 @@ contract NFTPoolManager is IERC721Receiver, ReentrancyGuard, Ownable{
     event CallerSet(address indexed caller, bool allowed);
 
     error NoCaller();
-    error InvaildData();
+    error invalidData();
     error ErrorPool();
 
     modifier OnlyCaller() {
-        if(owner() == msg.sender || authorizedCaller[msg.sender]){
+       //不是Owner且不是被授权地址 
+        if(owner() != msg.sender && !authorizedCaller[msg.sender]){
             revert NoCaller();
         }
         _;
@@ -37,6 +38,13 @@ contract NFTPoolManager is IERC721Receiver, ReentrancyGuard, Ownable{
 
     constructor() Ownable(msg.sender){}
 
+    /**
+     * 接受NFT的回调函数
+     * @param operator //触发转账的交易员
+     * @param from //NFT原持有者
+     * @param tokenId //转入的NFT ID
+     * @param data //附加数据
+     */
     function onERC721Received(
         address operator,
         address from,
@@ -44,8 +52,8 @@ contract NFTPoolManager is IERC721Receiver, ReentrancyGuard, Ownable{
         bytes calldata data
     ) external returns (bytes4){
         //校验数据合法
-        if(data.length ==32 || data.length ==1){
-            revert InvaildData();
+        if(data.length !=32 && data.length !=1){
+            revert invalidData();
         }
         uint8 rarity;
         if(data.length ==1){
@@ -54,6 +62,7 @@ contract NFTPoolManager is IERC721Receiver, ReentrancyGuard, Ownable{
         if(data.length ==32){
             rarity = abi.decode(data,(uint8));
         }
+        require(rarity > 0 && rarity <= 4, "Invalid rarity range");  // 假设稀有度范围1-5
 
         //NFT存入稀有度池
         Item memory item = Item({
@@ -195,7 +204,7 @@ contract NFTPoolManager is IERC721Receiver, ReentrancyGuard, Ownable{
      * @param tokenId NFT的tokenId
      * @param to 接收者地址
      */
-    function rescueERC721(address token, uint256 tokenId, address to) external onlyOwner {
+    function rescueERC721(address token, uint256 tokenId, address to) external onlyOwner nonReentrant{
         IERC721(token).safeTransferFrom(address(this), to, tokenId);
     }
 }

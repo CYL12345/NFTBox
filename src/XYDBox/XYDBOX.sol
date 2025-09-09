@@ -6,9 +6,12 @@ import "lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 import "lib/chainlink-brownie-contracts/contracts/src/v0.8/vrf/dev/VRFConsumerBaseV2Plus.sol";
 import "lib/chainlink-brownie-contracts/contracts/src/v0.8/vrf/dev/interfaces/IVRFCoordinatorV2Plus.sol";
 import "lib/chainlink-brownie-contracts/contracts/src/v0.8/vrf/dev/libraries/VRFV2PlusClient.sol";
-import "../interface/INFTPoolManager.sol";
-contract XYDBOX is ERC721Enumerable,VRFConsumerBaseV2Plus{
+import "lib/openzeppelin-contracts/contracts/utils/Base64.sol";
+import "lib/openzeppelin-contracts/contracts/utils/ReentrancyGuard.sol";
 
+import "../interface/INFTPoolManager.sol";
+contract XYDBOX is ERC721Enumerable,VRFConsumerBaseV2Plus,ReentrancyGuard{
+    //-----奖品池管理配置-----
     INFTPoolManager public poolManager;
     //-----VRF配置-----
     IVRFCoordinatorV2Plus COORDINATOR;
@@ -22,6 +25,10 @@ contract XYDBOX is ERC721Enumerable,VRFConsumerBaseV2Plus{
     //-----盲盒配置-----
     uint256 public boxTotalSupply = 1;
     uint256 public boxPrice = 0.001 ether;
+    
+    string public constant METADATA_NAME = "XYDBOX";
+    string public constant METADATA_DESCRIPTION = "BOX";
+    string public constant METADATA_IMAGE = "https://gateway.pinata.cloud/ipfs/bafkreihpzzw25bhprgndownrf6w7y3ofwbpjzofgrtez3wvtqwie72jiuq";
 
     mapping(uint256 => bool) public ravealed;//是否开盒
     mapping(uint256 => uint8) public rarity;//稀有度
@@ -40,21 +47,35 @@ contract XYDBOX is ERC721Enumerable,VRFConsumerBaseV2Plus{
     error NotEnoughETH();
     error BoxRevealed();
     error NotOwner();
+    error errorPoolManagerAddr();
     event RandomsRequest(uint256 requestId,address indexed user);
     event OpenBox(address opener,uint8 pickedClass,address prizeAddress,uint256 prizeId);
+    event Destroy(uint256 tokenId);
     constructor(
-        uint256 _subscriptionId
+        uint256 _subscriptionId,
+        address _poolAddress
     ) ERC721("XYDBOX","XBX") VRFConsumerBaseV2Plus(vrfCoordinator){
         //配置稀有度
-        rarityPool.push(RarityConfig(1,100));//1%SSR
-        rarityPool.push(RarityConfig(2,900));//9%SR
-        rarityPool.push(RarityConfig(3,3000));//30%SR
-        rarityPool.push(RarityConfig(4,6000));//60%SR
+        rarityPool.push(RarityConfig(0,100));//1%SSR
+        rarityPool.push(RarityConfig(1,900));//9%SR
+        rarityPool.push(RarityConfig(2,3000));//30%SR
+        rarityPool.push(RarityConfig(3,6000));//60%SR
 
         COORDINATOR = IVRFCoordinatorV2Plus(vrfCoordinator);
         subId = _subscriptionId;
+        poolManager = INFTPoolManager(_poolAddress);
     }
-    
+
+    function setPoolManager(address _poolManager)external onlyOwner{
+        if(_poolManager== address(0)){
+            revert errorPoolManagerAddr();
+        }
+        poolManager = INFTPoolManager(_poolManager);
+    }
+
+    /**
+     * 购买盲盒（铸造盲盒NFT）
+     */
     function buyBox() external payable{
         if(msg.value < boxPrice){
             revert NotEnoughETH();
@@ -66,7 +87,7 @@ contract XYDBOX is ERC721Enumerable,VRFConsumerBaseV2Plus{
         boxIdToRequestId[tokenId] = requestId;
     }
     //开盒
-    function openBox(uint256 tokenId) external{
+    function openBox(uint256 tokenId) external nonReentrant{
         if(ravealed[tokenId]){
             revert BoxRevealed();
         }
@@ -86,8 +107,8 @@ contract XYDBOX is ERC721Enumerable,VRFConsumerBaseV2Plus{
             }
         }
         rarity[tokenId] = pickedClass;
-
         (address token,uint256 prizeNftId) = poolManager.popItem(pickedClass,ranNum,msg.sender);
+        _destroy(tokenId);
         emit OpenBox(msg.sender,pickedClass,token,prizeNftId);
     } 
 
@@ -115,5 +136,22 @@ contract XYDBOX is ERC721Enumerable,VRFConsumerBaseV2Plus{
         emit RandomsRequest(requestId,msg.sender);
         return requestId;
     }
+    function tokenURI(uint256 tokenId) public view override returns (string memory) {
+         _requireOwned(tokenId);
+        bytes memory json = abi.encodePacked(
+            '{',
+                '"name":"', METADATA_NAME, '",',
+                '"description":"', METADATA_DESCRIPTION, '",',
+                '"image":"', METADATA_IMAGE, '"',
+            '}'
+        );
 
+        string memory encoded = Base64.encode(json);
+        return string(abi.encodePacked("data:application/json;base64,", encoded));
+    }
+
+    function _destroy(uint256 tokenId) internal {
+        _safeTransfer(msg.sender,address(0),tokenId);
+        emit Destroy(tokenId);
+    }
 }

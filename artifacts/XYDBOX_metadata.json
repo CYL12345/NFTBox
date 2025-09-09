@@ -11,6 +11,11 @@
 						"internalType": "uint256",
 						"name": "_subscriptionId",
 						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_poolAddress",
+						"type": "address"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -194,7 +199,17 @@
 			},
 			{
 				"inputs": [],
+				"name": "ReentrancyGuardReentrantCall",
+				"type": "error"
+			},
+			{
+				"inputs": [],
 				"name": "ZeroAddress",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "errorPoolManagerAddr",
 				"type": "error"
 			},
 			{
@@ -265,21 +280,40 @@
 				"inputs": [
 					{
 						"indexed": false,
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					}
+				],
+				"name": "Destroy",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
 						"internalType": "address",
 						"name": "opener",
 						"type": "address"
 					},
 					{
 						"indexed": false,
-						"internalType": "uint256",
-						"name": "tokenId",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
 						"internalType": "uint8",
 						"name": "pickedClass",
 						"type": "uint8"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "prizeAddress",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "prizeId",
+						"type": "uint256"
 					}
 				],
 				"name": "OpenBox",
@@ -375,6 +409,45 @@
 						"internalType": "uint16",
 						"name": "",
 						"type": "uint16"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "METADATA_DESCRIPTION",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "METADATA_IMAGE",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "METADATA_NAME",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
 					}
 				],
 				"stateMutability": "view",
@@ -567,13 +640,7 @@
 					}
 				],
 				"name": "openBox",
-				"outputs": [
-					{
-						"internalType": "uint8",
-						"name": "pickedClass",
-						"type": "uint8"
-					}
-				],
+				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -602,6 +669,19 @@
 				"outputs": [
 					{
 						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "poolManager",
+				"outputs": [
+					{
+						"internalType": "contract INFTPoolManager",
 						"name": "",
 						"type": "address"
 					}
@@ -812,6 +892,19 @@
 					}
 				],
 				"name": "setCoordinator",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_poolManager",
+						"type": "address"
+					}
+				],
+				"name": "setPoolManager",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -1038,6 +1131,11 @@
 					{
 						"details": "An `owner`'s token query was out of bounds for `index`. NOTE: The owner being `address(0)` indicates a global out of bounds index."
 					}
+				],
+				"ReentrancyGuardReentrantCall()": [
+					{
+						"details": "Unauthorized reentrant call."
+					}
 				]
 			},
 			"events": {
@@ -1109,6 +1207,9 @@
 			"methods": {
 				"acceptOwnership()": {
 					"notice": "Allows an ownership transfer to be completed by the recipient."
+				},
+				"buyBox()": {
+					"notice": "购买盲盒（铸造盲盒NFT）"
 				},
 				"owner()": {
 					"notice": "Get the current owner"
@@ -1275,6 +1376,14 @@
 				"dweb:/ipfs/QmTnA35z7XzkxFSRUqB6CGVH1nhmvajwnDNfA5PiKmYuCi"
 			]
 		},
+		"lib/openzeppelin-contracts/contracts/utils/Base64.sol": {
+			"keccak256": "0xa6e7bef7b7366455c2bbb0230b9df0d0c1b3967770a2d2d1d2905e83bc8ccd56",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://778dc5e61d82a53cbc1584dd819142466ec856d9e2a9789cf9d774966e578ace",
+				"dweb:/ipfs/QmbhjtXKYP9FKcnfLsXSszLELJS79fcmM96T3zRcYomJSN"
+			]
+		},
 		"lib/openzeppelin-contracts/contracts/utils/Bytes.sol": {
 			"keccak256": "0xb363f660b3fe0d3aacceff1cab8ef825045bbd85b2f6bce0ffc87f05bb9e5708",
 			"license": "MIT",
@@ -1297,6 +1406,22 @@
 			"urls": [
 				"bzz-raw://c6a5ff4f9fd8649b7ee20800b7fa387d3465bd77cf20c2d1068cd5c98e1ed57a",
 				"dweb:/ipfs/QmVSaVJf9FXFhdYEYeCEfjMVHrxDh5qL4CGkxdMWpQCrqG"
+			]
+		},
+		"lib/openzeppelin-contracts/contracts/utils/ReentrancyGuard.sol": {
+			"keccak256": "0x4adeafe83d2adc5841d039a47ed53e774a48f086a3056eae9067b5881810cd1f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://9fe8dff5b18d1bd415afa9beea101bf5225cb8f47a140f621b5f805d0dc3f1b9",
+				"dweb:/ipfs/QmR6TjUsHbp9wj5tzfjRDG8tXRwyrzQSHv446PYi6X5z2G"
+			]
+		},
+		"lib/openzeppelin-contracts/contracts/utils/StorageSlot.sol": {
+			"keccak256": "0xcf74f855663ce2ae00ed8352666b7935f6cddea2932fdf2c3ecd30a9b1cd0e97",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://9f660b1f351b757dfe01438e59888f31f33ded3afcf5cb5b0d9bf9aa6f320a8b",
+				"dweb:/ipfs/QmarDJ5hZEgBtCmmrVzEZWjub9769eD686jmzb2XpSU1cM"
 			]
 		},
 		"lib/openzeppelin-contracts/contracts/utils/Strings.sol": {
@@ -1347,11 +1472,27 @@
 				"dweb:/ipfs/QmVUSvooZKEdEdap619tcJjTLcAuH6QBdZqAzWwnAXZAWJ"
 			]
 		},
-		"src/XYDBox/XYDBOX.sol": {
-			"keccak256": "0x06892fd192737d0b7efe0eb146494877526a8eaeae78cc7f675fa46e3ebaed1a",
+		"src/NFTPoolManager.sol": {
+			"keccak256": "0x8b067ff6538183bd0b37ac76a76dddd9c26991ec8fb0989897453aca7786d804",
+			"license": "MIT",
 			"urls": [
-				"bzz-raw://3ec25694819a7a46ea51f3e0a35df3d3fc3d45719dc78b19d6e6aec426865f24",
-				"dweb:/ipfs/QmNjzFpT1d7HNtcb14Kkz5SgHkWmK5WcxGcpyxqYBqdRqi"
+				"bzz-raw://79c51f39053f0a1301149bc7083b2381abb72b966996cf430af6ae3b028fe1e1",
+				"dweb:/ipfs/QmbVoYbAaUw2shPXhSFXzUzaqpyZ6qeV2P837zF9GLeJCn"
+			]
+		},
+		"src/XYDBox/XYDBOX.sol": {
+			"keccak256": "0x76b6955bb675f7880ce965637cd959713b5f69b9a036f6e4520ea77bd65ad652",
+			"urls": [
+				"bzz-raw://6e220fc1d42b341d24f87971ee7f79629b409546eb896a88365555800cd92cc4",
+				"dweb:/ipfs/Qmb43Nn1ricPDjiikVTxvQZFcV96TaGmQi5oxa5S9W92y3"
+			]
+		},
+		"src/interface/INFTPoolManager.sol": {
+			"keccak256": "0x11a58319a0c67de175eb96b3469cd698172d53a069072c4cc67b503f7738f05e",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://382f0cc9b704e1ef3b1da72cb3c75380c88838f3c32ce80d9eeb677640655c4c",
+				"dweb:/ipfs/QmRmU9JACZt4KofYmtSq44GRNuW3aWGw9SqYmPUZvAmbCa"
 			]
 		}
 	},
